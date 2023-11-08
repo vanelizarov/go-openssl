@@ -1,6 +1,6 @@
 ⚠️⚠️⚠️
 
-**Status:** Archived and not maintained. Please see https://github.com/libp2p/go-openssl/issues/41 for details.
+**Status:** Archived and not maintained. Please see https://github.com/vanelizarov/go-openssl/issues/41 for details.
 
 ⚠️⚠️⚠️
 
@@ -14,7 +14,7 @@ Forked from https://github.com/spacemonkeygo/openssl (unmaintained) to add:
 
 ---
 
-Please see http://godoc.org/github.com/libp2p/go-openssl for more info
+Please see http://godoc.org/github.com/vanelizarov/go-openssl for more info
 
 ---
 

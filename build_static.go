@@ -18,7 +18,11 @@ package openssl
 
 // #cgo linux windows freebsd openbsd solaris pkg-config: --static libssl libcrypto
 // #cgo linux freebsd openbsd solaris CFLAGS: -Wno-deprecated-declarations
-// #cgo darwin CFLAGS: -I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/openssl/include -Wno-deprecated-declarations
-// #cgo darwin LDFLAGS: -L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/openssl/lib -lssl -lcrypto
+// #cgo darwin,386 CFLAGS: -I/usr/local/opt/openssl/include -Wno-deprecated-declarations
+// #cgo darwin,386 LDFLAGS: /usr/local/opt/openssl/lib/libcrypto.a /usr/local/opt/openssl/lib/libssl.a
+// #cgo darwin,amd64 CFLAGS: -I/usr/local/opt/openssl/include -Wno-deprecated-declarations
+// #cgo darwin,amd64 LDFLAGS: /usr/local/opt/openssl/lib/libcrypto.a /usr/local/opt/openssl/lib/libssl.a
+// #cgo darwin,arm64 CFLAGS: -I/opt/homebrew/opt/openssl/include -Wno-deprecated-declarations
+// #cgo darwin,arm64 LDFLAGS: /opt/homebrew/opt/openssl/lib/libcrypto.a /opt/homebrew/opt/openssl/lib/libssl.a
 // #cgo windows CFLAGS: -DWIN32_LEAN_AND_MEAN
 import "C"
