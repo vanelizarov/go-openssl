@@ -114,59 +114,67 @@ func NewCtx() (*Ctx, error) {
 
 // NewCtxFromFiles calls NewCtx, loads the provided files, and configures the
 // context to use them.
-func NewCtxFromFiles(cert_file string, key_file string) (*Ctx, error) {
+func NewCtxFromFiles(certFile string, keyFile string) (*Ctx, error) {
 	ctx, err := NewCtx()
 	if err != nil {
 		return nil, err
 	}
 
-	cert_bytes, err := os.ReadFile(cert_file)
+	return ctx, ctx.useFiles(certFile, keyFile)
+}
+
+func NewCtxFromFilesWithVersion(certFile, keyFile string, version SSLVersion) (*Ctx, error) {
+	ctx, err := NewCtxWithVersion(version)
 	if err != nil {
 		return nil, err
 	}
 
-	certs := SplitPEM(cert_bytes)
+	return ctx, ctx.useFiles(certFile, keyFile)
+}
+
+func (c *Ctx) useFiles(certFile string, keyFile string) error {
+	certBytes, err := os.ReadFile(certFile)
+	if err != nil {
+		return err
+	}
+
+	certs := SplitPEM(certBytes)
 	if len(certs) == 0 {
-		return nil, fmt.Errorf("no PEM certificate found in '%s'", cert_file)
+		return fmt.Errorf("no PEM certificate found in '%s'", certFile)
 	}
 	first, certs := certs[0], certs[1:]
 	cert, err := LoadCertificateFromPEM(first)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	err = ctx.UseCertificate(cert)
+	err = c.UseCertificate(cert)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	for _, pem := range certs {
 		cert, err := LoadCertificateFromPEM(pem)
 		if err != nil {
-			return nil, err
+			return err
 		}
-		err = ctx.AddChainCertificate(cert)
+		err = c.AddChainCertificate(cert)
 		if err != nil {
-			return nil, err
+			return err
 		}
 	}
 
-	key_bytes, err := os.ReadFile(key_file)
+	keyBytes, err := os.ReadFile(keyFile)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	key, err := LoadPrivateKeyFromPEM(key_bytes)
+	key, err := LoadPrivateKeyFromPEM(keyBytes)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	err = ctx.UsePrivateKey(key)
-	if err != nil {
-		return nil, err
-	}
-
-	return ctx, nil
+	return c.UsePrivateKey(key)
 }
 
 // EllipticCurve repesents the ASN.1 OID of an elliptic curve.
@@ -395,7 +403,9 @@ const (
 	NoSSLv2                            Options = C.SSL_OP_NO_SSLv2
 	NoSSLv3                            Options = C.SSL_OP_NO_SSLv3
 	NoTLSv1                            Options = C.SSL_OP_NO_TLSv1
-	NoTLSv13                           Options = C.SSL_OP_NO_TLSv1_3
+	NoTLSv1_1                          Options = C.SSL_OP_NO_TLSv1_1
+	NoTLSv1_2                          Options = C.SSL_OP_NO_TLSv1_2
+	NoTLSv1_3                          Options = C.SSL_OP_NO_TLSv1_3
 	CipherServerPreference             Options = C.SSL_OP_CIPHER_SERVER_PREFERENCE
 	NoSessionResumptionOrRenegotiation Options = C.SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION
 	NoTicket                           Options = C.SSL_OP_NO_TICKET

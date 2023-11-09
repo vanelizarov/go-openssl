@@ -476,11 +476,19 @@ int X_SSL_CTX_new_index() {
 }
 
 int X_SSL_CTX_set_min_proto_version(SSL_CTX *ctx, int version) {
+#if OPENSSL_VERSION_NUMBER >= 0x1010000fL
 	return SSL_CTX_set_min_proto_version(ctx, version);
+#else
+	return 0;
+#endif
 }
 
 int X_SSL_CTX_set_max_proto_version(SSL_CTX *ctx, int version) {
+#if OPENSSL_VERSION_NUMBER >= 0x1010000fL
 	return SSL_CTX_set_max_proto_version(ctx, version);
+#else
+	return 0;
+#endif
 }
 
 long X_SSL_CTX_set_options(SSL_CTX* ctx, long options) {
